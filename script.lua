@@ -274,7 +274,11 @@ RunService.Stepped:Connect(function()
 		local hrp = char:FindFirstChild("HumanoidRootPart")
 		if hrp then
 			hrp.Velocity = Vector3.new(0, 0, 0)
-			hrp.RotVelocity = Vector3.new(0, 15000, 0)
+			hrp.RotVelocity = Vector3.new(0, 20000, 0)
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			if hum then
+				hum.PlatformStand = false
+			end
 		end
 	end
 end)
