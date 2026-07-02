@@ -15,7 +15,8 @@ local states = {
 	WalkSpeed = false,
 	JumpBoost = false,
 	InfJump = false,
-	Noclip = false
+	Noclip = false,
+	Fling = false
 }
 
 local function styleFrame(frame, color, radius)
@@ -83,7 +84,7 @@ KeySubmit.Parent = KeyFrame
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 240, 0, 310)
+MainFrame.Size = UDim2.new(0, 240, 0, 360)
 MainFrame.Position = UDim2.new(0.1, 0, 0.3, 0)
 styleFrame(MainFrame, Color3.fromRGB(18, 18, 22), 12)
 MainFrame.Active = true
@@ -245,15 +246,35 @@ createToggle("Noclip", 4, function(isActive, btn, stroke)
 	end
 end)
 
+createToggle("Fling", 5, function(isActive, btn, stroke)
+	if isActive then
+		btn.Text = "Fling: ON"
+		btn.BackgroundColor3 = Color3.fromRGB(0, 80, 55)
+		stroke.Color = Color3.fromRGB(0, 220, 140)
+	else
+		btn.Text = "Fling: OFF"
+		btn.BackgroundColor3 = Color3.fromRGB(28, 28, 32)
+		stroke.Color = Color3.fromRGB(40, 40, 45)
+	end
+end)
+
 RunService.Stepped:Connect(function()
+	local char = LocalPlayer.Character
+	if not char then return end
+	
 	if states["Noclip"] then
-		local char = LocalPlayer.Character
-		if char then
-			for _, part in pairs(char:GetDescendants()) do
-				if part:IsA("BasePart") then
-					part.CanCollide = false
-				end
+		for _, part in pairs(char:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
 			end
+		end
+	end
+	
+	if states["Fling"] then
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			hrp.Velocity = Vector3.new(0, 0, 0)
+			hrp.RotVelocity = Vector3.new(0, 15000, 0)
 		end
 	end
 end)
